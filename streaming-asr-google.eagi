@@ -1,6 +1,6 @@
-#!/usr/bin/python3
+#!/usr/bin/python3.6
 
-DEBUG = False
+DEBUG = True
 
 import os
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="/var/lib/asterisk/agi-bin/google-cloud-credentials.json"
@@ -41,7 +41,7 @@ if len(sys.argv[3:]) > 0 and model != "phone_call": # alternative languages is n
     alternativeLanguages = sys.argv[3:]
 
 if DEBUG:
-    agi.verbose(str(enhancedModel) + " " + str(model) + " " + str(mainLanguage) + " " + str(alternativeLanguages))
+    agi.verbose("enhancedModel:"+str(enhancedModel) + " model:" + str(model) + " " + str(mainLanguage) + " " + str(alternativeLanguages))
 
 ##### Google Response Parser
 class Parser:
@@ -64,6 +64,8 @@ class Parser:
         is provided by the server.
         """
         speechDetected = False
+        if DEBUG:
+        	agi.verbose("Parsing Response")
 
         for response in responses:
 
@@ -73,15 +75,26 @@ class Parser:
                 break
 
             if not response.results:
+                if DEBUG:
+                    agi.verbose("No Response!")
                 continue
 
             result = response.results[0]
             if not result.alternatives:
+                if DEBUG:
+                    agi.verbose("No Alternative Results!")
+
                 continue
 
             speechDetected = True
             interimResults = result.alternatives[0].transcript
             # reaching this point means interim results was returned and the user started saying something
+
+            if DEBUG:
+                if result.is_final==True:
+                    agi.verbose("There is a response:!"+ interimResults   )#response.results[0].alternatives[0].transcript)
+
+
 
         if speechDetected: # get final result
             response = next(responses)
@@ -156,7 +169,7 @@ config = speech.RecognitionConfig(
     model=model,
     use_enhanced=enhancedModel
 )
-streaming_config = speech.StreamingRecognitionConfig(config=config, interim_results=True, single_utterance=True)
+streaming_config = speech.StreamingRecognitionConfig(config=config, interim_results=True, single_utterance=False)
 
 ##### Start to listen
 if DEBUG:
