@@ -22,6 +22,9 @@ These are the argv expected by the EAGI script in this particular order:
 - mainLanguage (e.g. "en-US"). Mandatory field
 - alternativeLanguages (e.g. "de-DE, pt-BR"). Optional array field. Does not work with "phone_call" model.
 ```
+You may need to set the authentication as in the document https://googleapis.dev/python/google-api-core/latest/auth.html
+if you faced issues with authenticationg the service
+```
 
 Example using Asterisk dialplan, where the default model is used, en-US is the main language and de-DE and pt-BR are alternative languages:
 
