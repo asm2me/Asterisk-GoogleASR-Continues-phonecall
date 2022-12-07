@@ -30,9 +30,9 @@ Example using Asterisk dialplan, where the default model is used, en-US is the m
 
 ```
 exten => 1234,1,Answer()   
-exten => 1234,n,eagi(streaming-asr-google.eagi,default,en-US,de-DE,pt-BR)   
+exten => 1234,n,eagi(streaming-asr-google.eagi,,en-US,ar-EG,en-UK)   #this will continueously listen and Recognise
 exten => 1234,n,Verbose(1,The text you just said is: ${TRANSCRIPT})   
-exten => 1234,n,Hangup()   
+exten => 1234,n,Hangup()    
 
 ```
 
